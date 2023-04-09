@@ -4,27 +4,30 @@
     <meta charset="UTF-8">
     <title>Vanilla Rust HLS Demo</title>
   
-    <body>
-	<video style="display: flex; justify-content: center;" id="video" width="640" height="360" controls=""></video>
-	<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background-color: white">
+	<h3>HLS Demo</h3>
+	<video id="video" class="video-js vjs-default-skin" controls style="width: 90vw; height: 90vh"></video>
+        <link href="https://vjs.zencdn.net/7.15.4/video-js.min.css" rel="stylesheet">
+	<script src="https://vjs.zencdn.net/7.15.4/video.min.js"></script>
 	<script>
-	    document.addEventListener('DOMContentLoaded', function() {
-		var video = document.getElementById('video');
-		var hlsUrl = 'http://localhost:8080/localhost.m3u8';
-
-	        if (Hls.isSupported()) {
-		    var hls = new Hls();
-		    hls.loadSource(hlsUrl);
-		    hls.attachMedia(video);
-		    hls.on(Hls.Events.MANIFEST_PARSED, function() {
-			//video.play();
-		    });
-		} else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-		    video.src = hlsUrl;
-		    video.addEventListener('loadedmetadata', function() {
-			//video.play();
-		    });
-		}
+	    document.addEventListener('DOMContentLoaded', function () {
+	        const videoElement = document.getElementById('video');
+	        const videoSrc = 'http://localhost:8080/playlist.m3u8';
+	        const player = videojs(videoElement, {
+	            controls: true,
+	            autoplay: true,
+	            preload: 'auto',
+	            sources: [
+	                {
+	                    src: videoSrc,
+	                    type: 'application/x-mpegURL',
+	                },
+	            ],
+	        });
+	    
+	        player.ready(() => {
+	            player.play();
+	        });
 	    });
 	</script>    
     </body>

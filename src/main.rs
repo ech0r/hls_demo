@@ -30,12 +30,12 @@ fn handle_client(mut stream: TcpStream) {
     let request = String::from_utf8_lossy(&buffer[..]);
     let response = match &request {
         r if r.contains(".m3u8") => {
-            let file = File::open("./segments/hls_demo.m3u8").unwrap();
+            let file = File::open("./segments/playlist.m3u8").unwrap();
             let mut reader = BufReader::new(file);
             let mut contents = Vec::new();
             reader.read_to_end(&mut contents).unwrap();
             let headers = format!(
-                "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\nContent-Type: application/vnd.apple.mpegurl\r\nContent-Length: {}\r\n\r\n", 
+                "HTTP/1.1 200 OK\r\nAccess-Control-Allow-Origin: *\r\nContent-Type: application/x-mpegURL\r\nContent-Length: {}\r\n\r\n", 
                 contents.len()
             ).as_bytes().to_vec();
             let mut response = headers;
