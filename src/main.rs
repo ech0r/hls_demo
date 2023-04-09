@@ -124,7 +124,13 @@ fn handle_client(mut stream: TcpStream) {
 fn generate_hls_segments(input_file: &str, output_dir: &str, segment_duration: u32) -> std::io::Result<()> {
     // Create the output directory if it doesn't exist
     fs::create_dir_all(output_dir)?;
+/*
+    Ended up using this command to generate the segments instead.
+    
+    ffmpeg -i ToS-4k-1920.mov -profile:v main -level 3.1 -c:v libx264 -preset:v veryfast -crf 23 -x264opts keyint=48:min-keyint=48:no-scenecut -c:a aac -b:a 128k -ac 2 -f hls -hls_time 6 -hls_list_size 0 -hls_playlist_type vod -hls_segment_type fmp4 -hls_fmp4_init_filename init.mp4 -hls_segment_filename "segments/%03d.mp4" segments/playlist.m3u8
 
+    TODO: have the server do it on startup
+*/
     let status = Command::new("ffmpeg")
         .arg("-i")
         .arg(input_file)
